@@ -20,9 +20,6 @@ import { getIngredients } from '../../services/ingredientsSlice';
 import { useDispatch } from '../../../src/services/store';
 
 const App = () => {
-  const handleModalClose = () => {
-    console.log('Закрыто');
-  };
   const location = useLocation();
   const backgroundLocation = location.state?.backgroundLocation;
   const dispatch = useDispatch();
@@ -31,89 +28,65 @@ const App = () => {
     dispatch(getIngredients());
   }, []);
 
+  const histBack = () => {
+    history.back();
+  };
+
   return (
     <div className={styles.app}>
       <AppHeader />
       <Routes location={backgroundLocation || location}>
-        {/* Для каждого роута указываем путь куда он нас ведет и компонент, который будет рендерится */}
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
-        <Route
-          path='/login'
-          element={
-            <ProtectedRoute>
-              <Login />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/register'
-          element={
-            <ProtectedRoute>
-              <Register />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/forgot-password'
-          element={
-            <ProtectedRoute>
-              <ForgotPassword />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/reset-password'
-          element={
-            <ProtectedRoute>
-              <ResetPassword />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/profile'
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/profile/orders'
-          element={
-            <ProtectedRoute>
-              <ProfileOrders />
-            </ProtectedRoute>
-          }
-        />
+        <Route path='/feed/:id' element={<OrderInfo />} />
+        <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route path='*' element={<NotFound404 />} />
-        <Route
-          path='/feed/:number'
-          element={
-            <Modal title='Что-то' onClose={handleModalClose}>
-              <OrderInfo />
-            </Modal>
-          }
-        />
-        <Route
-          path='/ingredients/:id'
-          element={
-            <Modal title='Что-то' onClose={handleModalClose}>
-              <IngredientDetails />
-            </Modal>
-          }
-        />
-        <Route
-          path='/profile/orders/:number'
-          element={
-            <ProtectedRoute>
-              <Modal title='Что-то' onClose={handleModalClose}>
+
+        <Route element={<ProtectedRoute needAuth={false} />}>
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/forgot-password' element={<ForgotPassword />} />
+          <Route path='/reset-password' element={<ResetPassword />} />
+        </Route>
+
+        <Route element={<ProtectedRoute needAuth />}>
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/profile/orders' element={<ProfileOrders />} />
+          <Route path='/profile/orders/:number' element={<OrderInfo />} />
+        </Route>
+      </Routes>
+
+      {backgroundLocation && (
+        <Routes>
+          <Route
+            path='/feed/:id'
+            element={
+              <Modal title={'Детали заказа'} onClose={histBack}>
+                <OrderInfo />
+              </Modal>
+            }
+          />
+          <Route
+            path='/ingredients/:id'
+            element={
+              <Modal title={'Детали ингредиента'} onClose={histBack}>
                 <IngredientDetails />
               </Modal>
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+            }
+          />
+
+          <Route element={<ProtectedRoute needAuth />}>
+            <Route
+              path='/profile/orders/:number'
+              element={
+                <Modal title={'Детали заказа'} onClose={histBack}>
+                  <OrderInfo />
+                </Modal>
+              }
+            />
+          </Route>
+        </Routes>
+      )}
     </div>
   );
 };

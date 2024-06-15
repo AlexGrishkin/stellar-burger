@@ -8,8 +8,10 @@ import { useSelector } from '../../../src/services/store';
 
 export const BurgerIngredients: FC = () => {
   /** TODO: взять переменные из стора */
+  //деструктурируем наш объект с селекторами из слайса и получаем массив объектов с ингридиентами
   const { selectorIngredientsData } = selectorIngredients;
   const ingredients = useSelector(selectorIngredientsData);
+  //фильтруем наш массив по типу каждого ингридиента чтобы получить соответствующие данные
   const buns = ingredients.filter((item) => item.type === 'bun');
   const mains = ingredients.filter((item) => item.type === 'main');
   const sauces = ingredients.filter((item) => item.type === 'sauce');
