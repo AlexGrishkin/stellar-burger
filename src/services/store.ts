@@ -7,13 +7,15 @@ import {
 } from 'react-redux';
 import { ingredientsSlice } from './ingredientsSlice';
 import { burgerConstructorSlice } from './burgerConstructorSlice';
+import { userSlice } from './userSlice';
 
 const rootReducer = {
   //заключаем ingredientsSlice.name в квадратные скобки, чтобы имя слайса вычислялось динамически
   //Инкапсуляция логики: ingredientsSlice.reducer является инкапсуляцией всей логики изменения состояния, связанной с этим срезом. Когда мы создаем срез с помощью createSlice, он автоматически создает для нас редьюсер на основе переданных редьюсеров и extraReducers.
   //Инкапсуляция логики означает, что вся логика, связанная с определенной функциональностью, упакована и скрыта внутри отдельного модуля или компонента, делая её независимой и изолированной от других частей системы.
   [ingredientsSlice.name]: ingredientsSlice.reducer,
-  [burgerConstructorSlice.name]: burgerConstructorSlice.reducer
+  [burgerConstructorSlice.name]: burgerConstructorSlice.reducer,
+  [userSlice.name]: userSlice.reducer
 }; // Заменить на импорт настоящего редьюсера
 
 const store = configureStore({

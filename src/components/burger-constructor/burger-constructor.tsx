@@ -3,7 +3,10 @@ import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../../src/services/store';
-import { removeOrder } from '../../../src/services/burgerConstructorSlice';
+import {
+  postOrder,
+  removeOrder
+} from '../../../src/services/burgerConstructorSlice';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
@@ -13,32 +16,32 @@ export const BurgerConstructor: FC = () => {
     (state) => state.burgerConstructor
   );
   const isLoading = status === 'Loading';
-  // const isAuthenticatedUser = useSelector(
-  //   (state) => state.user.isAuthenticated
-  // );
+  const isAuthenticatedUser = useSelector(
+    (state) => state.burgerUser.isAuthenticated
+  );
+  console.log(isAuthenticatedUser);
 
-  // function prepareOrder(): string[] {
-  //   let order: string[] = [];
+  function prepareOrder(): string[] {
+    let order: string[] = [];
 
-  //   if (data.bun) {
-  //     const ingredients: string[] = data.ingredients.map(
-  //       (ingredient) => ingredient._id
-  //     );
+    if (data.bun) {
+      const ingredients: string[] = data.ingredients.map(
+        (ingredient) => ingredient._id
+      );
 
-  //     order = [data.bun._id, ...ingredients, data.bun._id];
-  //   }
+      order = [data.bun._id, ...ingredients, data.bun._id];
+    }
 
-  //   return order;
-  // }
+    return order;
+  }
 
   const onOrderClick = () => {
-    // if (isAuthenticatedUser) {
-    //   const order = prepareOrder();
-    //   dispatch(postOrderThunk(order));
-    // } else {
-    //   navigate('/login');
-    // }
-    console.log('клик');
+    if (isAuthenticatedUser) {
+      const order = prepareOrder();
+      dispatch(postOrder(order));
+    } else {
+      navigate('/login');
+    }
   };
 
   const closeOrderModal = () => {

@@ -8,19 +8,19 @@ type ProtectedRouteProps = {
 };
 
 export const ProtectedRoute = ({ needAuth }: ProtectedRouteProps) => {
-  // const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.burgerUser);
   const isAuthenticated = getCookie('accessToken') != undefined;
   const location = useLocation();
 
-  // if (needAuth && !isAuthenticated) {
-  //   return <Navigate replace to='/login' state={{ from: location }} />;
-  // }
-  // if (!needAuth && isAuthenticated) {
-  //   return <Navigate replace to={location.state?.from || { pathname: '/' }} />;
-  // }
-  // if (user.isLoading) {
-  //   return <Preloader />;
-  // }
+  if (needAuth && !isAuthenticated) {
+    return <Navigate replace to='/login' state={{ from: location }} />;
+  }
+  if (!needAuth && isAuthenticated) {
+    return <Navigate replace to={location.state?.from || { pathname: '/' }} />;
+  }
+  if (user.status === 'Loading') {
+    return <Preloader />;
+  }
 
   return <Outlet />;
 };
