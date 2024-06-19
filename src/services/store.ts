@@ -8,6 +8,7 @@ import {
 import { ingredientsSlice } from './ingredientsSlice';
 import { burgerConstructorSlice } from './burgerConstructorSlice';
 import { userSlice } from './userSlice';
+import { orderSlice } from './orderSlice';
 
 const rootReducer = {
   //заключаем ingredientsSlice.name в квадратные скобки, чтобы имя слайса вычислялось динамически
@@ -15,7 +16,8 @@ const rootReducer = {
   //Инкапсуляция логики означает, что вся логика, связанная с определенной функциональностью, упакована и скрыта внутри отдельного модуля или компонента, делая её независимой и изолированной от других частей системы.
   [ingredientsSlice.name]: ingredientsSlice.reducer,
   [burgerConstructorSlice.name]: burgerConstructorSlice.reducer,
-  [userSlice.name]: userSlice.reducer
+  [userSlice.name]: userSlice.reducer,
+  [orderSlice.name]: orderSlice.reducer
 }; // Заменить на импорт настоящего редьюсера
 
 const store = configureStore({
