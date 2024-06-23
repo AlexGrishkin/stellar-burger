@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useNavigate } from 'react-router-dom';
@@ -11,16 +11,15 @@ import {
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  //деструктурируем необходимые данные из нашего burgerConstructor (имя слайса) подключенного к рут редьюсеру
-  const { data, order, status } = useSelector(
+
+  // Деструктурируем необходимые данные из нашего burgerConstructor (имя слайса) подключенного к рут редьюсеру
+  const { data, order, isLoading } = useSelector(
     (state) => state.burgerConstructor
   );
-  const isLoading = status === 'Loading';
   const isAuthenticatedUser = useSelector(
     (state) => state.burgerUser.isAuthenticated
   );
   console.log(isAuthenticatedUser);
-
   function prepareOrder(): string[] {
     let order: string[] = [];
 
@@ -28,7 +27,6 @@ export const BurgerConstructor: FC = () => {
       const ingredients: string[] = data.ingredients.map(
         (ingredient) => ingredient._id
       );
-
       order = [data.bun._id, ...ingredients, data.bun._id];
     }
 
@@ -58,8 +56,6 @@ export const BurgerConstructor: FC = () => {
     [data]
   );
 
-  // return null;
-
   return (
     <BurgerConstructorUI
       price={price}
@@ -71,3 +67,5 @@ export const BurgerConstructor: FC = () => {
     />
   );
 };
+
+export default BurgerConstructor;

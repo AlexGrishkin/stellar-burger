@@ -7,24 +7,14 @@ import {
 } from '@reduxjs/toolkit';
 import { TConstructorIngredient, TIngredient, TOrder } from '@utils-types';
 
-enum RequestStatus {
-  //начальное состояние, когда запрос еще не начат
-  Idle = 'Idle',
-  //состояние, когда запрос выполняется
-  Loading = 'Loading',
-  //состояние, когда запрос успешно завершился
-  Success = 'Success',
-  //состояние, когда запрос завершился неудачно
-  Failed = 'Failed'
-}
-
 type TBurgerConstructorState = {
   data: {
     bun: TConstructorIngredient | null;
     ingredients: TConstructorIngredient[];
   };
   order: TOrder | null;
-  status: RequestStatus;
+  isLoading: boolean;
+  error: string | null;
 };
 
 const initialState: TBurgerConstructorState = {
@@ -33,7 +23,8 @@ const initialState: TBurgerConstructorState = {
     ingredients: []
   },
   order: null,
-  status: RequestStatus.Idle
+  isLoading: false,
+  error: null
 };
 
 export const postOrder = createAsyncThunk(
@@ -87,14 +78,18 @@ export const burgerConstructorSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(postOrder.pending, (state) => {
-        state.status = RequestStatus.Loading;
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(postOrder.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message as string;
       })
       .addCase(postOrder.fulfilled, (state, action) => {
-        state.status = RequestStatus.Success;
+        state.isLoading = false;
+        state.error = null;
         state.order = action.payload.order;
-      })
-      .addCase(postOrder.rejected, (state) => {
-        state.status = RequestStatus.Failed;
+        state.data = initialState.data;
       });
   },
   selectors: {}

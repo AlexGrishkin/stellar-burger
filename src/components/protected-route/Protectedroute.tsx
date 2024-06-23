@@ -18,7 +18,7 @@ export const ProtectedRoute = ({ needAuth }: ProtectedRouteProps) => {
   if (!needAuth && isAuthenticated) {
     return <Navigate replace to={location.state?.from || { pathname: '/' }} />;
   }
-  if (user.status === 'Loading') {
+  if (user.error == null) {
     return <Preloader />;
   }
 

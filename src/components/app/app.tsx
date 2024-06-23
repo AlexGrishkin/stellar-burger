@@ -26,7 +26,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getIngredients());
-  }, []);
+  }, [dispatch]);
 
   const histBack = () => {
     history.back();

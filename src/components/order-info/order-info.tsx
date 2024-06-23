@@ -11,15 +11,6 @@ export const OrderInfo: FC = () => {
 
   const { selectorOrderData } = selectorOrder;
   const { selectorIngredientsData } = selectorIngredients;
-  // const orderData = {
-  //   createdAt: '',
-  //   ingredients: [],
-  //   _id: '',
-  //   status: '',
-  //   name: '',
-  //   updatedAt: 'string',
-  //   number: 0
-  // };
 
   const orderData = useSelector(selectorOrderData);
 

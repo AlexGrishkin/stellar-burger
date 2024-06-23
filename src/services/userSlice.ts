@@ -12,21 +12,11 @@ import {
 } from '../utils/burger-api';
 import { getCookie } from '../utils/cookie';
 
-enum RequestStatus {
-  //начальное состояние, когда запрос еще не начат
-  Idle = 'Idle',
-  //состояние, когда запрос выполняется
-  Loading = 'Loading',
-  //состояние, когда запрос успешно завершился
-  Success = 'Success',
-  //состояние, когда запрос завершился неудачно
-  Failed = 'Failed'
-}
-
 export type TUserState = {
   userData: TUser | null;
   orders: TOrder[];
-  status: RequestStatus;
+  error: string | null;
+  isLoading: boolean;
   isAuthenticated: boolean;
 };
 
@@ -46,11 +36,10 @@ function loadUser(): TUser | null {
 export const initialState: TUserState = {
   userData: loadUser(),
   orders: [],
-  status: RequestStatus.Idle,
+  error: null,
+  isLoading: false,
   isAuthenticated: getCookie('accessToken') != undefined
 };
-
-console.log(initialState);
 
 export const getUserThunk = createAsyncThunk('burgerUser/get', getUserApi);
 
@@ -86,82 +75,99 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(registerUserThunk.pending, (state) => {
-        state.status = RequestStatus.Loading;
+        state.error = null;
+        state.isLoading = true;
         state.isAuthenticated = false;
       })
       .addCase(registerUserThunk.rejected, (state, action) => {
-        state.status = RequestStatus.Failed;
+        state.error = action.error.message as string;
+        state.isLoading = false;
         state.isAuthenticated = false;
       })
       .addCase(registerUserThunk.fulfilled, (state, action) => {
-        state.status = RequestStatus.Success;
+        state.error = null;
+        state.isLoading = false;
         state.userData = action.payload.user;
         state.isAuthenticated = false;
       })
 
       .addCase(loginUserThunk.pending, (state) => {
-        state.status = RequestStatus.Loading;
+        state.isLoading = true;
+        state.error = null;
         state.isAuthenticated = false;
       })
       .addCase(loginUserThunk.rejected, (state, action) => {
-        state.status = RequestStatus.Failed;
+        state.isLoading = false;
+        state.error = action.error.message as string;
         state.isAuthenticated = false;
       })
       .addCase(loginUserThunk.fulfilled, (state, action) => {
-        state.status = RequestStatus.Success;
+        state.isLoading = false;
+        state.error = null;
         state.userData = action.payload.user;
         state.isAuthenticated = true;
       })
 
       .addCase(getUserThunk.pending, (state) => {
-        state.status = RequestStatus.Loading;
+        state.isLoading = true;
+        state.error = null;
         state.isAuthenticated = false;
       })
       .addCase(getUserThunk.rejected, (state) => {
-        state.status = RequestStatus.Failed;
+        state.isLoading = false;
         state.isAuthenticated = false;
       })
       .addCase(getUserThunk.fulfilled, (state, action) => {
-        state.status = RequestStatus.Success;
+        state.isLoading = false;
+        state.error = null;
         state.userData = action.payload.user;
         state.isAuthenticated = true;
       })
 
       .addCase(getUserOrdersThunk.pending, (state) => {
-        state.status = RequestStatus.Loading;
+        state.isLoading = false;
+        state.error = null;
       })
       .addCase(getUserOrdersThunk.rejected, (state, action) => {
-        state.status = RequestStatus.Failed;
+        state.isLoading = false;
+        state.error = action.error.message as string;
       })
       .addCase(getUserOrdersThunk.fulfilled, (state, action) => {
-        state.status = RequestStatus.Success;
+        state.isLoading = false;
+        state.error = null;
         state.orders = action.payload;
         state.isAuthenticated = true;
       })
 
       .addCase(userUpdateThunk.pending, (state) => {
-        state.status = RequestStatus.Loading;
+        state.isLoading = true;
+        state.error = null;
       })
       .addCase(userUpdateThunk.rejected, (state, action) => {
-        state.status = RequestStatus.Failed;
+        state.isLoading = false;
+        state.error = action.error.message as string;
       })
       .addCase(userUpdateThunk.fulfilled, (state, action) => {
-        state.status = RequestStatus.Success;
+        state.isLoading = false;
+        state.error = null;
         state.userData = action.payload.user;
       })
 
       .addCase(userLogoutThunk.pending, (state) => {
-        state.status = RequestStatus.Loading;
+        state.isLoading = true;
+        state.error = null;
         state.isAuthenticated = true;
       })
       .addCase(userLogoutThunk.rejected, (state, action) => {
-        state.status = RequestStatus.Failed;
+        state.isLoading = false;
+        state.error = action.error.message as string;
         state.isAuthenticated = true;
       })
       .addCase(userLogoutThunk.fulfilled, (state) => {
         state.userData = null;
         state.orders = [];
-        state.status = RequestStatus.Success;
+        state.error = null;
+        state.isLoading = false;
         state.isAuthenticated = false;
       });
   }
