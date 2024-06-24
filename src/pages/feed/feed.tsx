@@ -6,7 +6,6 @@ import { getFeedThunk } from '../../../src/services/feedSlice';
 import { useDispatch, useSelector } from '../../../src/services/store';
 
 export const Feed: FC = () => {
-  /** TODO: взять переменную из стора */
   const dispatch = useDispatch();
   const { orders, isLoading } = useSelector((state) => state.burgerFeed);
 

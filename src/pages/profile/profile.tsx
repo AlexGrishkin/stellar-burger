@@ -6,7 +6,7 @@ import { userUpdateThunk } from '../../../src/services/userSlice';
 export const Profile: FC = () => {
   const userData = useSelector((state) => state.burgerUser.userData);
   const dispatch = useDispatch();
-  /** TODO: взять переменную из стора */
+
   const user = {
     name: userData?.name || '',
     email: userData?.email || ''
@@ -61,6 +61,4 @@ export const Profile: FC = () => {
       handleInputChange={handleInputChange}
     />
   );
-
-  return null;
 };

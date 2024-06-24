@@ -7,8 +7,8 @@ import {
 } from '@reduxjs/toolkit';
 import { TConstructorIngredient, TIngredient, TOrder } from '@utils-types';
 
-type TBurgerConstructorState = {
-  data: {
+export type TConstructorState = {
+  constructorItems: {
     bun: TConstructorIngredient | null;
     ingredients: TConstructorIngredient[];
   };
@@ -17,8 +17,8 @@ type TBurgerConstructorState = {
   error: string | null;
 };
 
-const initialState: TBurgerConstructorState = {
-  data: {
+export const initialState: TConstructorState = {
+  constructorItems: {
     bun: null,
     ingredients: []
   },
@@ -27,7 +27,7 @@ const initialState: TBurgerConstructorState = {
   error: null
 };
 
-export const postOrder = createAsyncThunk(
+export const postOrderThunk = createAsyncThunk(
   'burgerConstructor/post',
   async (array: string[]) => orderBurgerApi(array)
 );
@@ -40,8 +40,8 @@ export const burgerConstructorSlice = createSlice({
       //этот редьюсер будет обрабатывать экшены, загружаемые из списка ингридиентов, сам обработчик мы поместили в компонент ингридиента, он использует экшен креатор и отправляет данные самого ингредиента в этот слайс, где его обрабатывает этот редьюсер
       reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
         action.payload.type === 'bun'
-          ? (state.data.bun = action.payload)
-          : state.data.ingredients.push(action.payload);
+          ? (state.constructorItems.bun = action.payload)
+          : state.constructorItems.ingredients.push(action.payload);
       },
       //сначала срабатывает функция подготовки, которая присваивает объекту ингредиента уникальное id
       prepare: (ingredient: TIngredient) => {
@@ -51,21 +51,22 @@ export const burgerConstructorSlice = createSlice({
     },
     //редюсер который удаляет ингридиент из конструктора бургера, сам обработчик мы поместили в компонент элемента конструктора, он использует экшен креатор и отправляет данные самого ингредиента в этот слайс, где его обрабатывает этот редьюсер
     removeIngredient: (state, action: PayloadAction<string>) => {
-      state.data.ingredients = state.data.ingredients.filter(
-        (ingredient) => ingredient.id !== action.payload
-      );
+      state.constructorItems.ingredients =
+        state.constructorItems.ingredients.filter(
+          (ingredient) => ingredient.id !== action.payload
+        );
     },
 
     //редюсер который перемещает ингридиент на позицию вверх в конструкторе бургера, сам обработчик мы поместили в компонент элемента конструктора, он использует экшен креатор и отправляет данные самого ингредиента в этот слайс, где его обрабатывает этот редьюсер
     moveUpIngredient: (state, action: PayloadAction<number>) => {
-      const arr = state.data.ingredients;
+      const arr = state.constructorItems.ingredients;
       const index = action.payload;
       arr.splice(index, 0, arr.splice(index - 1, 1)[0]);
     },
 
     //редюсер который перемещает ингридиент на позицию вниз в конструкторе бургера, сам обработчик мы поместили в компонент элемента конструктора, он использует экшен креатор и отправляет данные самого ингредиента в этот слайс, где его обрабатывает этот редьюсер
     moveDownIngredient: (state, action: PayloadAction<number>) => {
-      const arr = state.data.ingredients;
+      const arr = state.constructorItems.ingredients;
       const index = action.payload;
       arr.splice(index, 0, arr.splice(index + 1, 1)[0]);
     },
@@ -77,19 +78,19 @@ export const burgerConstructorSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(postOrder.pending, (state) => {
+      .addCase(postOrderThunk.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(postOrder.rejected, (state, action) => {
+      .addCase(postOrderThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message as string;
       })
-      .addCase(postOrder.fulfilled, (state, action) => {
+      .addCase(postOrderThunk.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
         state.order = action.payload.order;
-        state.data = initialState.data;
+        state.constructorItems = initialState.constructorItems;
       });
   },
   selectors: {}

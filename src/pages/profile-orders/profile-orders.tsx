@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from '../../../src/services/store';
 import { getUserOrdersThunk } from '../../../src/services/userSlice';
 
 export const ProfileOrders: FC = () => {
-  /** TODO: взять переменную из стора */
   const dispatch = useDispatch();
   const orders: TOrder[] = useSelector((state) => state.burgerUser.orders);
 

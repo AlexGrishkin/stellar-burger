@@ -6,7 +6,9 @@ import { useSelector } from '../../../src/services/store';
 
 export const IngredientDetails: FC = () => {
   const { id } = useParams();
-  const ingredients = useSelector((state) => state.ingredients.data);
+  const ingredients = useSelector(
+    (state) => state.burgerIngredients.ingredients
+  );
   const ingredientData = ingredients.find(
     (ingredient) => ingredient._id === id
   );

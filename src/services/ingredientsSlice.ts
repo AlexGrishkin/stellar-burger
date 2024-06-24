@@ -2,34 +2,24 @@ import { getIngredientsApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TIngredient } from '@utils-types';
 
-//создаем enum (перечисление) для описания различных состояний запроса
-enum RequestStatus {
-  //начальное состояние, когда запрос еще не начат
-  Idle = 'Idle',
-  //состояние, когда запрос выполняется
-  Loading = 'Loading',
-  //состояние, когда запрос успешно завершился
-  Success = 'Success',
-  //состояние, когда запрос завершился неудачно
-  Failed = 'Failed'
-}
-
 //
-type TIngredientsState = {
-  data: TIngredient[];
-  status: RequestStatus;
+type TIngredientState = {
+  ingredients: TIngredient[];
+  isLoading: boolean;
+  error: string | null;
 };
 
 //описываем начальное состояние
-const initialState: TIngredientsState = {
-  data: [],
-  status: RequestStatus.Idle
+export const initialState: TIngredientState = {
+  ingredients: [],
+  isLoading: false,
+  error: null
 };
 
 //createAsyncThunk — это функция из Redux Toolkit, которая упрощает создание асинхронных действий (thunks) в Redux.
 /*Она автоматизирует обработку трех состояний асинхронного запроса: "pending" (ожидание), "fulfilled" (успешное выполнение) и "rejected" (неудача). Это делает управление асинхронными операциями более удобным и упрощает обработку состояний загрузки, успеха и ошибки.*/
 /**В Redux Toolkit, createAsyncThunk автоматически создает экшен-креаторы для каждого состояния асинхронного действия: pending, fulfilled и rejected. Это делается для того, чтобы упростить обработку различных состояний асинхронных операций (например, запросов к API). */
-export const getIngredients = createAsyncThunk<TIngredient[]>(
+export const getIngredientsThunk = createAsyncThunk<TIngredient[]>(
   //Строковый идентификатор действия в createAsyncThunk используется для идентификации создаваемого асинхронного действия. Он служит префиксом для создаваемых типов действий (pending, fulfilled, rejected) и помогает Redux однозначно определить, к какому slice состояния относится данное действие.
   //префикс — это строка, используемая для идентификации действия и облегчения его отслеживания в логике приложения
   /*В этом примере 'ingredients/getIngredients' — это строковый идентификатор действия. На его основе Redux Toolkit будет генерировать следующие действия:
@@ -37,7 +27,7 @@ export const getIngredients = createAsyncThunk<TIngredient[]>(
   'ingredients/getIngredients/fulfilled'
   'ingredients/getIngredients/rejected' 
   Использование такого префикса позволяет легко отслеживать, к какому slice и какому действию относится конкретное состояние или действие.*/
-  'ingredients/getIngredients',
+  'burgerIngredients',
   //Вторым аргументом createAsyncThunk является асинхронная функция, которая выполняет запрос и возвращает Promise. Эта функция содержит основную логику для выполнения асинхронной операции, такой как HTTP-запрос к API.
   /*
   Асинхронная функция: Функция getIngredientsApi — это асинхронная функция, которая выполняет HTTP-запрос с помощью fetch. Она возвращает Promise, который разрешается в массив объектов типа TIngredient.
@@ -51,7 +41,7 @@ export const getIngredients = createAsyncThunk<TIngredient[]>(
 //Слайс (slice) в Redux Toolkit представляет собой часть состояния (store) и логику, связанную с управлением этой частью состояния.
 export const ingredientsSlice = createSlice({
   //строка, которая используется в качестве префикса для всех экшенов, создаваемых этим слайсом
-  name: 'ingredients',
+  name: 'burgerIngredients',
   //начальное состояние слайса
   initialState,
   //Объект, содержащий функции-редьюсеры для обработки синхронных действий (или по другому экшены которые они обрабатывают)
@@ -68,21 +58,19 @@ export const ingredientsSlice = createSlice({
       /*addCase(actionCreator, reducer):
         actionCreator: Экшен-креатор, для которого добавляется обработчик (например, getIngredients.pending).
         reducer: Функция-редьюсер, которая будет вызвана, когда соответствующий экшен будет отправлен. */
-      .addCase(getIngredients.pending, (state) => {
-        state.status = RequestStatus.Loading;
+      .addCase(getIngredientsThunk.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
       })
-      .addCase(getIngredients.fulfilled, (state, action) => {
-        state.status = RequestStatus.Success;
-        state.data = action.payload;
+      .addCase(getIngredientsThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message as string;
       })
-      .addCase(getIngredients.rejected, (state) => {
-        state.status = RequestStatus.Failed;
+      .addCase(getIngredientsThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.ingredients = action.payload;
       });
-  },
-  selectors: {
-    selectorIngredientsData: (state: TIngredientsState) => state.data,
-    selectorIngredientsStatus: (state: TIngredientsState) => state.status
   }
 });
 
-export const selectorIngredients = ingredientsSlice.selectors;
+export default ingredientsSlice.reducer;

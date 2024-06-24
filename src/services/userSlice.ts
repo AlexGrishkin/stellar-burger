@@ -55,7 +55,11 @@ export const userUpdateThunk = createAsyncThunk(
 
 export const registerUserThunk = createAsyncThunk(
   'burgerUser/register',
-  async (data: TRegisterData) => await registerUserApi(data)
+  async (data: TRegisterData) => {
+    const response = await registerUserApi(data);
+    console.log(response); // Добавьте это для проверки ответа
+    return response;
+  }
 );
 
 export const loginUserThunk = createAsyncThunk(

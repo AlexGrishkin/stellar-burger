@@ -6,7 +6,6 @@ import { userLogoutThunk } from '../../../src/services/userSlice';
 
 export const ProfileMenu: FC = () => {
   const { pathname } = useLocation();
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -14,5 +13,6 @@ export const ProfileMenu: FC = () => {
     dispatch(userLogoutThunk());
     navigate('/');
   };
+
   return <ProfileMenuUI handleLogout={handleLogout} pathname={pathname} />;
 };

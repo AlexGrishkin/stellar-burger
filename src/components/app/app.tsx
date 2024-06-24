@@ -16,16 +16,16 @@ import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { ProtectedRoute } from '../protected-route/Protectedroute';
 import { useEffect } from 'react';
-import { getIngredients } from '../../services/ingredientsSlice';
+import { getIngredientsThunk } from '../../services/ingredientsSlice';
 import { useDispatch } from '../../../src/services/store';
 
 const App = () => {
   const location = useLocation();
-  const backgroundLocation = location.state?.backgroundLocation;
   const dispatch = useDispatch();
+  const background = location.state?.background;
 
   useEffect(() => {
-    dispatch(getIngredients());
+    dispatch(getIngredientsThunk());
   }, [dispatch]);
 
   const histBack = () => {
@@ -35,7 +35,7 @@ const App = () => {
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Routes location={backgroundLocation || location}>
+      <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
         <Route path='/feed/:id' element={<OrderInfo />} />
@@ -56,7 +56,7 @@ const App = () => {
         </Route>
       </Routes>
 
-      {backgroundLocation && (
+      {background && (
         <Routes>
           <Route
             path='/feed/:id'
