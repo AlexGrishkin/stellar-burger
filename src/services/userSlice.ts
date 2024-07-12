@@ -57,7 +57,6 @@ export const registerUserThunk = createAsyncThunk(
   'burgerUser/register',
   async (data: TRegisterData) => {
     const response = await registerUserApi(data);
-    console.log(response); // Добавьте это для проверки ответа
     return response;
   }
 );

@@ -25,6 +25,7 @@ const rootReducer = {
 const store = configureStore({
   //подключаем корневой редьюсер
   reducer: rootReducer,
+  //devTools является опциональным параметром конфигурации configureStore, который определяет, должны ли включаться Redux DevTools Extension для отладки Redux-приложения в браузере.
   devTools: process.env.NODE_ENV !== 'production'
 });
 
