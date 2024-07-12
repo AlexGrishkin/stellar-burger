@@ -1,24 +1,56 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../../src/services/store';
+import {
+  postOrderThunk,
+  removeOrder
+} from '../../../src/services/burgerConstructorSlice';
 
 export const BurgerConstructor: FC = () => {
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
-  const constructorItems = {
-    bun: {
-      price: 0
-    },
-    ingredients: []
-  };
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const orderRequest = false;
+  // Деструктурируем необходимые данные из нашего burgerConstructor (имя слайса) подключенного к рут редьюсеру
+  const { constructorItems, order, isLoading } = useSelector(
+    (state) => state.burgerConstructor
+  );
 
-  const orderModalData = null;
+  const isAuthenticatedUser = useSelector(
+    (state) => state.burgerUser.isAuthenticated
+  );
+
+  function prepareOrder(): string[] {
+    let order: string[] = [];
+
+    if (constructorItems.bun) {
+      const ingredients: string[] = constructorItems.ingredients.map(
+        (ingredient) => ingredient._id
+      );
+
+      order = [
+        constructorItems.bun._id,
+        ...ingredients,
+        constructorItems.bun._id
+      ];
+    }
+
+    return order;
+  }
 
   const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest) return;
+    if (isAuthenticatedUser) {
+      const order = prepareOrder();
+      dispatch(postOrderThunk(order));
+    } else {
+      navigate('/login');
+    }
   };
-  const closeOrderModal = () => {};
+
+  const closeOrderModal = () => {
+    dispatch(removeOrder());
+  };
 
   const price = useMemo(
     () =>
@@ -30,16 +62,16 @@ export const BurgerConstructor: FC = () => {
     [constructorItems]
   );
 
-  return null;
-
   return (
     <BurgerConstructorUI
       price={price}
-      orderRequest={orderRequest}
+      orderRequest={isLoading}
       constructorItems={constructorItems}
-      orderModalData={orderModalData}
+      orderModalData={order}
       onOrderClick={onOrderClick}
       closeOrderModal={closeOrderModal}
     />
   );
 };
+
+export default BurgerConstructor;
