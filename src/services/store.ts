@@ -5,7 +5,7 @@ import {
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
-import { ingredientsSlice } from './ingredientsSlice';
+import { ingredientsSlice } from './ingredientsSlice/ingredientsSlice';
 import { burgerConstructorSlice } from './burgerConstructorSlice';
 import { userSlice } from './userSlice';
 import { orderByNumberSlice } from './orderSlice';
