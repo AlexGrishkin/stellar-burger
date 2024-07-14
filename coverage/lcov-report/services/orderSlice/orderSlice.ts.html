@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for services/feedSlice/feedSlice.ts</title>
+    <title>Code coverage report for services/orderSlice/orderSlice.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">services/feedSlice</a> feedSlice.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">services/orderSlice</a> orderSlice.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>49/49</span>
+                <span class='fraction'>46/46</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>49/49</span>
+                <span class='fraction'>46/46</span>
             </div>
         
             
@@ -109,11 +109,7 @@
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -152,8 +148,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -163,53 +157,50 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { TOrder } from '@utils-types';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getFeedsApi } from '../../utils/burger-api';
+import { getOrderByNumberApi } from '../../utils/burger-api';
 &nbsp;
-export type TFeedState = {
-  orders: TOrder[];
-  total: number;
-  totalToday: number;
+export type TIngredientState = {
+  orderData: TOrder | null;
   isLoading: boolean;
   error: string | null;
 };
 &nbsp;
-export const initialState: TFeedState = {
-  orders: [],
-  total: 0,
-  totalToday: 0,
+export const initialState: TIngredientState = {
+  orderData: null,
   isLoading: false,
   error: null
 };
 &nbsp;
-export const getFeedThunk = createAsyncThunk('feed/get', getFeedsApi);
+export const getOrderByNumberThunk = createAsyncThunk(
+  'burgerOrderByNumber/get',
+  async (number: number) =&gt; getOrderByNumberApi(number)
+);
 &nbsp;
-export const feedSlice = createSlice({
-  name: 'burgerFeed',
+export const orderByNumberSlice = createSlice({
+  name: 'burgerOrderByNumber',
   initialState,
   reducers: {},
   selectors: {
-    getFeedStateSelector: <span class="fstat-no" title="function not covered" >(state) =&gt; state</span>
+    getOrderByNumberSelector: <span class="fstat-no" title="function not covered" >(state) =&gt; state</span>
   },
   extraReducers: (builder) =&gt; {
     builder
-      .addCase(getFeedThunk.pending, (state) =&gt; {
+      .addCase(getOrderByNumberThunk.pending, (state) =&gt; {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(getFeedThunk.rejected, (state, action) =&gt; {
+      .addCase(getOrderByNumberThunk.rejected, (state, action) =&gt; {
         state.isLoading = false;
         state.error = action.error.message as string;
       })
-      .addCase(getFeedThunk.fulfilled, (state, action) =&gt; {
+      .addCase(getOrderByNumberThunk.fulfilled, (state, action) =&gt; {
         state.isLoading = false;
-        state.orders = action.payload.orders;
-        state.total = action.payload.total;
-        state.totalToday = action.payload.totalToday;
+        state.orderData = action.payload.orders[0];
       });
   }
 });
 &nbsp;
-export default feedSlice.reducer;
+export default orderByNumberSlice.reducer;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

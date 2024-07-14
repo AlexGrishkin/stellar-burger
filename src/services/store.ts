@@ -6,10 +6,10 @@ import {
   useSelector as selectorHook
 } from 'react-redux';
 import { ingredientsSlice } from './ingredientsSlice/ingredientsSlice';
-import { burgerConstructorSlice } from './burgerConstructorSlice';
-import { userSlice } from './userSlice';
-import { orderByNumberSlice } from './orderSlice';
-import { feedSlice } from './feedSlice';
+import { burgerConstructorSlice } from './burgerConstructorSlice/burgerConstructorSlice';
+import { userSlice } from './userSlice/userSlice';
+import { orderByNumberSlice } from './orderSlice/orderSlice';
+import { feedSlice } from './feedSlice/feedSlice';
 
 const rootReducer = {
   //заключаем ingredientsSlice.name в квадратные скобки, чтобы имя слайса вычислялось динамически
