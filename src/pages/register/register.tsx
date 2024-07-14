@@ -2,7 +2,7 @@ import { FC, SyntheticEvent, useState } from 'react';
 import { RegisterUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../../src/services/store';
 import { useNavigate } from 'react-router-dom';
-import { registerUserThunk } from '../../../src/services/userSlice';
+import { registerUserThunk } from '../../../src/services/userSlice/userSlice';
 
 export const Register: FC = () => {
   const [userName, setUserName] = useState('');

@@ -9,8 +9,8 @@ import {
   logoutApi,
   registerUserApi,
   updateUserApi
-} from '../utils/burger-api';
-import { getCookie } from '../utils/cookie';
+} from '../../utils/burger-api';
+import { getCookie } from '../../utils/cookie';
 
 export type TUserState = {
   userData: TUser | null;
@@ -57,7 +57,6 @@ export const registerUserThunk = createAsyncThunk(
   'burgerUser/register',
   async (data: TRegisterData) => {
     const response = await registerUserApi(data);
-    console.log(response); // Добавьте это для проверки ответа
     return response;
   }
 );

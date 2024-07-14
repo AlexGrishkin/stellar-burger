@@ -16,7 +16,7 @@ import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { ProtectedRoute } from '../protected-route/Protectedroute';
 import { useEffect } from 'react';
-import { getIngredientsThunk } from '../../services/ingredientsSlice';
+import { getIngredientsThunk } from '../../services/ingredientsSlice/ingredientsSlice';
 import { useDispatch } from '../../../src/services/store';
 
 const App = () => {

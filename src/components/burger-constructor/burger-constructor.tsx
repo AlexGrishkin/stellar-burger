@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from '../../../src/services/store';
 import {
   postOrderThunk,
   removeOrder
-} from '../../../src/services/burgerConstructorSlice';
+} from '../../services/burgerConstructorSlice/burgerConstructorSlice';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();

@@ -5,11 +5,11 @@ import {
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
-import { ingredientsSlice } from './ingredientsSlice';
-import { burgerConstructorSlice } from './burgerConstructorSlice';
-import { userSlice } from './userSlice';
-import { orderByNumberSlice } from './orderSlice';
-import { feedSlice } from './feedSlice';
+import { ingredientsSlice } from './ingredientsSlice/ingredientsSlice';
+import { burgerConstructorSlice } from './burgerConstructorSlice/burgerConstructorSlice';
+import { userSlice } from './userSlice/userSlice';
+import { orderByNumberSlice } from './orderSlice/orderSlice';
+import { feedSlice } from './feedSlice/feedSlice';
 
 const rootReducer = {
   //заключаем ingredientsSlice.name в квадратные скобки, чтобы имя слайса вычислялось динамически
@@ -25,6 +25,7 @@ const rootReducer = {
 const store = configureStore({
   //подключаем корневой редьюсер
   reducer: rootReducer,
+  //devTools является опциональным параметром конфигурации configureStore, который определяет, должны ли включаться Redux DevTools Extension для отладки Redux-приложения в браузере.
   devTools: process.env.NODE_ENV !== 'production'
 });
 
